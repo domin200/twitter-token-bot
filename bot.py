@@ -38,7 +38,7 @@ def format_reply(data):
     return f"🔍 {name}\n💲 Price: ${price:,.4f}\n🧢 Mcap: ${mcap:,.0f}"
 
 def run_bot():
-    mentions = client.get_users_mentions(id=user_id, max_results=5)
+    mentions = client.get_users_mentions(id=user_id, max_results=5,user_auth=True)
     for tw in reversed(mentions.data or []):
         if tw.author_id == user_id or tw.in_reply_to_user_id == user_id:
             continue  # 이미 답장했거나 내 트윗이면 패스
