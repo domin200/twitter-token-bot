@@ -1,8 +1,23 @@
-import re, tweepy, requests, os
+import os, tweepy, re, time, requests
 
-# ① 추출용 정규식
+client = tweepy.Client(
+    consumer_key=os.getenv("X_CONSUMER"),
+    consumer_secret=os.getenv("X_CONSUMER_SECRET"),
+    access_token=os.getenv("X_ACCESS"),
+    access_token_secret=os.getenv("X_ACCESS_SECRET"),
+    wait_on_rate_limit=True            # ← 429 나오면 자동 대기
+)
+
+# ① 가능하면 환경변수로 직접 주입
+USER_ID = os.getenv("BOT_USER_ID")
+
+if not USER_ID:
+    # ② 없으면 한 번만 API 조회 (user_auth 반드시 True!)
+    USER_ID = str(client.get_me(user_auth=True).data.id)
+
 CA_RE   = re.compile(r'0x[a-fA-F0-9]{40}')
 TICK_RE = re.compile(r'\$(\w{2,10})')
+
 
 # ② X 인증
 client = tweepy.Client(
